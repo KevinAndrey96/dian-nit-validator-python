@@ -17,4 +17,7 @@ htmlcov/
 # OS metadata
 .DS_Store
 Thumbs.db
+# Build and Distribution
+dist/
+build/
 *.egg-info/

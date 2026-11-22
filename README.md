@@ -4,7 +4,8 @@
 > Fielmente implementado según el **Artículo 375 del Estatuto Tributario** y el **Decreto 2460 de 2013 de la DIAN**.
 
 [![CI](https://github.com/KevinAndrey96/dian-nit-validator-python/actions/workflows/ci.yml/badge.svg)](https://github.com/KevinAndrey96/dian-nit-validator-python/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyPI](https://img.shields.io/pypi/v/dian-nit-validator.svg?color=blue)](https://pypi.org/project/dian-nit-validator/)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-Passing_100%25-brightgreen.svg)](tests/test_validator.py)
 [![Dependencies](https://img.shields.io/badge/Dependencies-Zero_External-blue.svg)](pyproject.toml)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -21,9 +22,10 @@
    - [Formateo de NIT con Puntos y Guión](#3-formateo-de-nit)
    - [Integración con Pydantic / FastAPI](#4-ejemplo-de-integración-con-pydantic--fastapi)
 5. [Uso desde la Línea de Comandos (CLI)](#-uso-desde-la-línea-de-comandos-cli)
-6. [Casos de Prueba Verificados](#-casos-de-prueba-verificados)
-7. [Ejercicios y Algoritmos Históricos](#-ejercicios-y-algoritmos-históricos)
-8. [Autor](#-autor)
+6. [Construcción y Publicación a PyPI](#-construcción-y-publicación-a-pypi)
+7. [Casos de Prueba Verificados](#-casos-de-prueba-verificados)
+8. [Ejercicios y Algoritmos Históricos](#-ejercicios-y-algoritmos-históricos)
+9. [Autor](#-autor)
 
 ---
 
@@ -61,14 +63,17 @@ flowchart LR
 
 ## 📦 Instalación
 
-Puedes instalar la librería directamente desde GitHub usando `pip`:
+### Desde PyPI:
+```bash
+pip install dian-nit-validator
+```
 
+### Directamente desde GitHub:
 ```bash
 pip install git+https://github.com/KevinAndrey96/dian-nit-validator-python.git
 ```
 
-O clonar el repositorio localmente para desarrollo:
-
+### Entorno local de desarrollo:
 ```bash
 git clone https://github.com/KevinAndrey96/dian-nit-validator-python.git
 cd dian-nit-validator-python
@@ -161,6 +166,38 @@ python3 -m nit_validator 860007386-1
 python3 -m nit_validator -f 890900050
 # Salida:
 # 890.900.050-1
+```
+
+---
+
+## 🚀 Construcción y Publicación a PyPI
+
+El proyecto incluye configuración estándar PEP 517 / PEP 621 con `pyproject.toml`.
+
+### 1. Generación de Artefactos de Distribución
+```bash
+# Instalar herramientas de empaquetado
+pip install --upgrade build twine
+
+# Compilar sdist (.tar.gz) y wheel (.whl)
+python -m build
+
+# Verificar la integridad y metadatos del paquete
+twine check dist/*
+```
+
+### 2. Publicación a PyPI
+
+#### Opción A: Automatizada vía GitHub Actions (Recomendada)
+Cada vez que se publica un Release en GitHub (ej. tag `v1.0.0`), el workflow `.github/workflows/publish-pypi.yml` compila y publica los artefactos automáticamente mediante OIDC Trusted Publishing.
+
+#### Opción B: Publicación Manual con Twine
+```bash
+# Subir al repositorio de pruebas TestPyPI (opcional)
+twine upload --repository testpypi dist/*
+
+# Subir a PyPI Oficial
+twine upload dist/*
 ```
 
 ---
