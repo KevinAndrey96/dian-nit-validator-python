@@ -26,7 +26,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Financial and Insurance Industry",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -34,7 +33,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Office/Business :: Financial :: Accounting"
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.urls]
 Homepage = "https://github.com/KevinAndrey96/dian-nit-validator-python"
