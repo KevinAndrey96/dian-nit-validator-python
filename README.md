@@ -1,145 +1,198 @@
-# Python Algorithmic Solutions & Financial Utilities 🐍
+# Validador y Calculador de Dígito de Verificación (DV) NIT DIAN Colombia 🇨🇴
 
-> **Colección de algoritmos prácticos y utilidades en Python:** Cálculo y validación del Dígito de Verificación NIT DIAN (Módulo 11), Máquina de Estados Finitos para Navegación 2D y Agregación de Estructuras de Datos.
+> **Librería ultraligera y CLI en Python para el cálculo y validación del Dígito de Verificación del NIT en Colombia (Módulo 11).**  
+> Fielmente implementado según el **Artículo 375 del Estatuto Tributario** y el **Decreto 2460 de 2013 de la DIAN**.
 
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-Passing_100%25-brightgreen.svg)](test_exercises.py)
+[![Tests](https://img.shields.io/badge/Tests-Passing_100%25-brightgreen.svg)](tests/test_validator.py)
+[![Dependencies](https://img.shields.io/badge/Dependencies-Zero_External-blue.svg)](pyproject.toml)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
 
 ## 📌 Tabla de Contenidos
-1. [Descripción de los Algoritmos](#-descripción-de-los-algoritmos)
-   - [1. Validador de NIT DIAN Colombia (Módulo 11)](#1-validador-de-nit-dian-colombia-módulo-11)
-   - [2. Máquina de Estados Cardinal para Navegación 2D](#2-máquina-de-estados-cardinal-para-navegación-2d)
-   - [3. Agregación y Ordenamiento Multivariable](#3-agregación-y-ordenamiento-multivariable)
-2. [Suite de Pruebas Unitarias](#-suite-de-pruebas-unitarias)
-3. [Instalación y Ejecución](#-instalación-y-ejecución)
-4. [Autor](#-autor)
+1. [Características Principales](#-características-principales)
+2. [Fundamento Legal y Algoritmo Matemático](#-fundamento-legal-y-algoritmo-matemático)
+3. [Instalación](#-instalación)
+4. [Guía de Uso Rápido (Python API)](#-guía-de-uso-rápido-python-api)
+   - [Cálculo del Dígito de Verificación](#1-cálculo-del-dígito-de-verificación-dv)
+   - [Validación de NIT Completo](#2-validación-de-nit-completo)
+   - [Formateo de NIT con Puntos y Guión](#3-formateo-de-nit)
+   - [Integración con Pydantic / FastAPI](#4-ejemplo-de-integración-con-pydantic--fastapi)
+5. [Uso desde la Línea de Comandos (CLI)](#-uso-desde-la-línea-de-comandos-cli)
+6. [Casos de Prueba Verificados](#-casos-de-prueba-verificados)
+7. [Ejercicios y Algoritmos Históricos](#-ejercicios-y-algoritmos-históricos)
+8. [Autor](#-autor)
 
 ---
 
-## 📖 Descripción de los Algoritmos
+## ✨ Características Principales
 
-### 1. Validador de NIT DIAN Colombia (Módulo 11)
-*Archivo:* `verification.py`
-
-En Colombia, el Número de Identificación Tributaria (**NIT**) expedido por la Dirección de Impuestos y Aduanas Nacionales (**DIAN**) utiliza un algoritmo ponderado basado en **Módulo 11** para verificar la autenticidad e integridad del número tributario (Artículo 375 del Estatuto Tributario).
-
-#### Fundamento Matemático:
-Dada una serie de dígitos del NIT $d_1, d_2, \dots, d_n$ alineados de derecha a izquierda, se multiplican por una serie de factores primos fijos:
-$$P = [41, 37, 29, 23, 19, 17, 13, 7, 3]$$
-
-1. Se calcula la suma ponderada:
-   $$\text{Suma} = \sum_{i=0}^{8} (d_i \times P_i)$$
-2. Se obtiene el residuo de la división entera por 11:
-   $$\text{Residuo} = \text{Suma} \pmod{11}$$
-3. Reglas de validación:
-   * Si $\text{Residuo} \in \{0, 1\}$, el dígito de verificación es el propio residuo.
-   * Si $\text{Residuo} \ge 2$, el dígito de verificación es $11 - \text{Residuo}$.
-
-```python
-from verification import verificar_nit
-
-# Ejemplo: Bancolombia S.A. (NIT: 860007386 - DV: 1)
-is_valid = verificar_nit(860007386, 1)
-print(is_valid)  # True
-```
+* ⚡ **Cero Dependencias Externas:** Funciona exclusivamente con la biblioteca estándar de Python sin sobrecargar tu entorno ni generar vulnerabilidades en tu árbol de dependencias.
+* 🏢 **Soporte Universal de Longitud:** Compatible con NITs de **1 a 15 dígitos** (personas naturales, cédulas de ciudadanía, personas jurídicas, consorcios y entidades estatales).
+* 🧼 **Sanitización Automática:** Acepta enteros (`860007386`), cadenas con puntos (`"860.007.386"`), espacios o formatos con guión (`"860007386-1"`).
+* 💻 **Herramienta de Consola (CLI):** Comando interactivo para terminales y scripts bash / pipelines CI/CD.
+* 🧪 **Suite de Pruebas Exhaustiva:** Verificado con empresas reales del listado de Grandes Contribuyentes de Colombia.
 
 ---
 
-### 2. Máquina de Estados Cardinal para Navegación 2D
-*Archivo:* `robot.py`
+## 📐 Fundamento Legal y Algoritmo Matemático
 
-Modela una **Máquina de Estados Finitos Determinista (FSM)** que simula la orientación espacial de un agente autónomo sobre un plano bidimensional.
+En Colombia, el Número de Identificación Tributaria (**NIT**) expedido por la **Dirección de Impuestos y Aduanas Nacionales (DIAN)** utiliza un algoritmo ponderado basado en **Módulo 11** para evitar errores de digitación y fraude en transacciones comerciales y facturación electrónica.
 
-#### Transiciones de Estado:
-* **Estados posibles:** $\{N, E, S, W\}$ (Norte, Este, Sur, Oeste).
-* **Entradas (Acciones de giro):**
-  * `R` (*Right*): Giro horario de 90°
-  * `L` (*Left*): Giro antihorario de 90°
-  * `H` (*Half-turn*): Giro de 180°
-  * `.` (*Neutral*): Mantiene orientación actual
+### Vector de Pesos Primos Oficial DIAN:
+Para un NIT de hasta 15 dígitos, se multiplica cada dígito de derecha a izquierda por los factores de ponderación primos:
+
+$$P = [71, 67, 59, 53, 47, 43, 41, 37, 29, 23, 19, 17, 13, 7, 3]$$
+
+Para el estándar más común de 9 dígitos, se emplean los últimos 9 coeficientes: `[41, 37, 29, 23, 19, 17, 13, 7, 3]`.
 
 ```mermaid
-stateDiagram-v2
-    [*] --> N
-    N --> E : R (+90°)
-    N --> W : L (-90°)
-    N --> S : H (180°)
-    
-    E --> S : R (+90°)
-    E --> N : L (-90°)
-    E --> W : H (180°)
-    
-    S --> W : R (+90°)
-    S --> E : L (-90°)
-    S --> N : H (180°)
-    
-    W --> N : R (+90°)
-    W --> S : L (-90°)
-    W --> E : H (180°)
-```
-
-Permite encadenar secuencias de movimientos continuos:
-```python
-from robot import movimiento_robot
-
-# Si inicia en Norte, gira a la Derecha (E), luego media vuelta (W) y mantiene:
-resultado = movimiento_robot('N', 'R', 'H', '.')
-print(resultado)  # 'W' (West / Oeste)
+flowchart LR
+    NIT["NIT: d1, d2, ..., dn"] --> DotProduct["Producto Escalar con Pesos DIAN<br/>Suma = Σ (di × Pi)"]
+    DotProduct --> Modulo["Residuo = Suma mod 11"]
+    Modulo --> Condicion{"¿Residuo en (0, 1)?"}
+    Condicion -->|Sí| Exacto["DV = Residuo"]
+    Condicion -->|No| Resta["DV = 11 - Residuo"]
 ```
 
 ---
 
-### 3. Agregación y Ordenamiento Multivariable
-*Archivo:* `student.py`
+## 📦 Instalación
 
-Procesa y analiza colecciones heterogéneas de diccionarios en memoria. Resuelve la identificación del elemento con valor máximo en múltiples dimensiones (materias académicas), empleando funciones de orden superior (`sorted` con clave `lambda`) para garantizar determinismo en el desempate por orden alfabético.
-
----
-
-## 🧪 Suite de Pruebas Unitarias
-
-El proyecto incluye pruebas automatizadas con el framework nativo `unittest`, verificando casos de borde y respuestas esperadas sin requerir dependencias externas:
+Puedes instalar la librería directamente desde GitHub usando `pip`:
 
 ```bash
-python3 -m unittest test_exercises.py -v
+pip install git+https://github.com/KevinAndrey96/dian-nit-validator-python.git
 ```
 
-Resultado de ejecución:
-```text
-test_robot_rotations (test_exercises.TestExercises) ... ok
-test_robot_sequence (test_exercises.TestExercises) ... ok
-test_student_grading (test_exercises.TestExercises) ... ok
-test_verificar_nit_invalid (test_exercises.TestExercises) ... ok
-test_verificar_nit_valid (test_exercises.TestExercises) ... ok
+O clonar el repositorio localmente para desarrollo:
 
-----------------------------------------------------------------------
-Ran 5 tests in 0.001s
-
-OK
+```bash
+git clone https://github.com/KevinAndrey96/dian-nit-validator-python.git
+cd dian-nit-validator-python
+pip install -e .
 ```
 
 ---
 
-## 💻 Instalación y Ejecución
+## 🚀 Guía de Uso Rápido (Python API)
 
-1. **Clonar repositorio:**
-   ```bash
-   git clone https://github.com/KevinAndrey96/basic-exercises-using-python.git
-   cd basic-exercises-using-python
-   ```
+### 1. Cálculo del Dígito de Verificación (DV)
+Calcula el dígito que debe acompañar a cualquier NIT:
 
-2. **Ejecutar pruebas:**
-   ```bash
-   python3 -m unittest discover
-   ```
+```python
+from nit_validator import calcular_dv
 
-3. **Ejecutar script individual:**
-   ```bash
-   python3 verification.py
-   ```
+# Entrada como cadena o entero
+dv_bancolombia = calcular_dv("860007386")
+print(dv_bancolombia)  # 1
+
+# Soporta NITs con formato de puntos
+dv_ecopetrol = calcular_dv("899.999.068")
+print(dv_ecopetrol)    # 1
+```
+
+### 2. Validación de NIT Completo
+Valida si el dígito proporcionado coincide con el cálculo matemático oficial:
+
+```python
+from nit_validator import validar_nit
+
+# Formato cadena unificada con guión:
+print(validar_nit("860007386-1"))       # True
+print(validar_nit("860.007.386-1"))     # True
+print(validar_nit("860007386-9"))       # False (DV incorrecto)
+
+# Formato separado (NIT, DV):
+print(validar_nit(860007386, 1))        # True
+print(validar_nit("860007386", "1"))    # True
+```
+
+### 3. Formateo de NIT
+Convierte números crudos a la representación estándar colombiana:
+
+```python
+from nit_validator import formatear_nit
+
+print(formatear_nit(860007386))                  # "860.007.386-1"
+print(formatear_nit(860007386, incluir_dv=False)) # "860.007.386"
+```
+
+### 4. Ejemplo de Integración con Pydantic / FastAPI
+
+Ideal para microservicios de facturación electrónica y pasarelas de pago:
+
+```python
+from pydantic import BaseModel, validator
+from nit_validator import validar_nit, formatear_nit
+
+class EmpresaSchema(BaseModel):
+    razon_social: str
+    nit: str
+
+    @validator('nit')
+    def validar_nit_dian(cls, v):
+        if not validar_nit(v):
+            raise ValueError('El NIT proporcionado o su dígito de verificación no son válidos ante la DIAN')
+        return formatear_nit(v)
+```
+
+---
+
+## 🖥️ Uso desde la Línea de Comandos (CLI)
+
+El paquete incluye una CLI que puedes invocar directamente:
+
+```bash
+# Calcular el DV de un NIT:
+python3 -m nit_validator 860007386
+# Salida:
+# Dígito de Verificación (DV): 1
+# NIT Completo: 860.007.386-1
+
+# Validar un NIT (retorna código de salida 0 si es válido, 1 si es inválido):
+python3 -m nit_validator 860007386-1
+# Salida:
+# ✅ VÁLIDO: El NIT 860007386-1 coincide con el algoritmo oficial DIAN.
+
+# Formatear con separadores de miles y guión:
+python3 -m nit_validator -f 890900050
+# Salida:
+# 890.900.050-1
+```
+
+---
+
+## 🏢 Casos de Prueba Verificados
+
+El algoritmo ha sido probado contra registros reales de la DIAN:
+
+| Entidad / Gran Contribuyente | NIT Base | Dígito (DV) | NIT Completo | Estado |
+| :--- | :---: | :---: | :---: | :---: |
+| **Bancolombia S.A.** | `860007386` | **1** | `860.007.386-1` | ✅ Válido |
+| **Ecopetrol S.A.** | `899999068` | **1** | `899.999.068-1` | ✅ Válido |
+| **Grupo Nutresa S.A.** | `890900050` | **1** | `890.900.050-1` | ✅ Válido |
+| **Almacenes Éxito S.A.** | `890900608` | **9** | `890.900.608-9` | ✅ Válido |
+| **DIAN** | `800197268` | **4** | `800.197.268-4` | ✅ Válido |
+
+---
+
+## 🗃️ Ejercicios y Algoritmos Históricos
+
+Este repositorio conserva su antigüedad histórica de commits. Los ejercicios complementarios desarrollados previamente se preservan organizados en el directorio `extra_algorithms/`:
+* `extra_algorithms/robot_fsm.py`: Simulación de orientación 2D mediante Máquina de Estados Finitos (FSM).
+* `extra_algorithms/student_ranking.py`: Agregación y ordenamiento multivariable de estructuras de datos.
+
+---
+
+## 🧪 Ejecución de Pruebas Unitarias
+
+Para ejecutar la suite de pruebas del proyecto:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
 
 ---
 

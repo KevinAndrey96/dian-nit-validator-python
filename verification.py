@@ -1,30 +1,28 @@
-digit_list = list([41, 37, 29, 23, 19, 17, 13, 7, 3])
+"""
+Módulo de compatibilidad hacia atrás con el script histórico verification.py.
+Delega al paquete modular nit_validator.
+"""
+
+from nit_validator.validator import (
+    calcular_dv,
+    validar_nit,
+    formatear_nit,
+    PESOS_DIAN,
+)
+
+# Alias de compatibilidad con código histórico
+digit_list = PESOS_DIAN[-9:]
 
 
 def products_sum(n_list, d_list):
-    sum_result = n_list[0] * d_list[0]
-    sum_result += n_list[1] * d_list[1]
-    sum_result += n_list[2] * d_list[2]
-    sum_result += n_list[3] * d_list[3]
-    sum_result += n_list[4] * d_list[4]
-    sum_result += n_list[5] * d_list[5]
-    sum_result += n_list[6] * d_list[6]
-    sum_result += n_list[7] * d_list[7]
-    sum_result += n_list[8] * d_list[8]
-    return sum_result
+    return sum(n * d for n, d in zip(n_list, d_list))
 
 
 def verificar_nit(NIT, digito):
-    verification = 0
-    nit_list = list(map(int, str(NIT)))
-    verification += products_sum(nit_list, digit_list)
-    residue = verification % 11
-    if residue == digito or residue == 0:
-        return True
-    if 11 - residue == digito:
-        return True
-    return False
+    return validar_nit(NIT, digito)
 
 
 if __name__ == '__main__':
-    print(verificar_nit(860007386, 1))
+    # Bancolombia S.A.
+    print("Verificación NIT 860007386 - 1:", verificar_nit(860007386, 1))
+    print("DV Calculado:", calcular_dv(860007386))
