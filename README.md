@@ -3,6 +3,7 @@
 > **Librería ultraligera y CLI en Python para el cálculo y validación del Dígito de Verificación del NIT en Colombia (Módulo 11).**  
 > Fielmente implementado según el **Artículo 375 del Estatuto Tributario** y el **Decreto 2460 de 2013 de la DIAN**.
 
+[![CI](https://github.com/KevinAndrey96/dian-nit-validator-python/actions/workflows/ci.yml/badge.svg)](https://github.com/KevinAndrey96/dian-nit-validator-python/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-Passing_100%25-brightgreen.svg)](tests/test_validator.py)
 [![Dependencies](https://img.shields.io/badge/Dependencies-Zero_External-blue.svg)](pyproject.toml)
