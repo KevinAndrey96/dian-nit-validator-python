@@ -3,7 +3,7 @@
 > **Librería ultraligera y CLI en Python para el cálculo y validación del Dígito de Verificación del NIT en Colombia (Módulo 11).**  
 > Fielmente implementado según el **Artículo 375 del Estatuto Tributario** y el **Decreto 2460 de 2013 de la DIAN**.
 
-[![CI](https://github.com/KevinAndrey96/dian-nit-validator-python/actions/workflows/ci.yml/badge.svg)](https://github.com/KevinAndrey96/dian-nit-validator-python/actions/workflows/ci.yml)
+[![CI](https://github.com/KevinAndrey96/python-dian-nit-validator/actions/workflows/ci.yml/badge.svg)](https://github.com/KevinAndrey96/python-dian-nit-validator/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/dian-nit-validator.svg?color=blue)](https://pypi.org/project/dian-nit-validator/)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-Passing_100%25-brightgreen.svg)](tests/test_validator.py)
@@ -70,13 +70,13 @@ pip install dian-nit-validator
 
 ### Directamente desde GitHub:
 ```bash
-pip install git+https://github.com/KevinAndrey96/dian-nit-validator-python.git
+pip install git+https://github.com/KevinAndrey96/python-dian-nit-validator.git
 ```
 
 ### Entorno local de desarrollo:
 ```bash
-git clone https://github.com/KevinAndrey96/dian-nit-validator-python.git
-cd dian-nit-validator-python
+git clone https://github.com/KevinAndrey96/python-dian-nit-validator.git
+cd python-dian-nit-validator
 pip install -e .
 ```
 

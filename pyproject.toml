@@ -36,8 +36,8 @@ classifiers = [
 requires-python = ">=3.10"
 
 [project.urls]
-Homepage = "https://github.com/KevinAndrey96/dian-nit-validator-python"
-Repository = "https://github.com/KevinAndrey96/dian-nit-validator-python.git"
+Homepage = "https://github.com/KevinAndrey96/python-dian-nit-validator"
+Repository = "https://github.com/KevinAndrey96/python-dian-nit-validator.git"
 
 [project.scripts]
 dian-nit = "nit_validator.cli:main"
